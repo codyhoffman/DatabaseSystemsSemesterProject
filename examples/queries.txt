@@ -1,0 +1,19 @@
+
+1. Select student names who have successfully enrolled for the course like fundamentals using credit card starting with 1111... 
+
+select S.StudentName FROM Students S, StudentCards SC WHERE  S.StudentEmailAddress = SC.StudentID AND SC.CreditCardNo LIKE '1111%' AND S.StudentEmailAddress in (Select StudentID from StudentCourses sss, Courses C Where sss.CourseID = C.CourseID And C.CourseName LIKE '%Fundamentals%');
+
+
+
+
+2. select all male professors who teach students born before 1990
+
+select I.InstructorName, I.InstructorGender From Instructors I, CourseInstructors CI WHERE I.InstructorGender = 'M' AND CI.InstructorID = I.InstructorID AND CI.CourseID IN (Select F.CourseID From StudentCourses F, Students S WHERE F.StudentID = S.StudentEmailAddress And S.StudentDOB < '1990-01-01')
+
+
+
+
+3. Print date of youngest students in each course
+
+select max(s2.studentDOB) from Students s2, Courses c2, StudentCourses sc where sc.studentID=s2.studentEmailAddress AND sc.courseID=c2.courseID group by c2.courseName;
+

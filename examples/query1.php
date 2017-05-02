@@ -15,7 +15,7 @@ if (! @mysql_select_db("db_cjhoffman") ) {
   exit();
 }
 # do a simple query and print it out
-$sql_query="SELECT StudentEmailAddress, StudentName FROM Students";
+$sql_query="SELECT S.StudentName FROM Students S, StudentCards SC WHERE  S.StudentEmailAddress = SC.StudentID AND SC.CreditCardNo LIKE '1111%' AND S.StudentEmailAddress IN (SELECT StudentID FROM StudentCourses sss, Courses C WHERE sss.CourseID = C.CourseID AND C.CourseName LIKE '%Fundamentals%')";
 
 $result_set = mysql_query($sql_query);
 if (!$result_set) {
@@ -24,12 +24,11 @@ if (!$result_set) {
   exit();
 }
 
+echo("<h2> Names of students who have successfully enrolled for a fundamentals course using a credit card starting with digits 1111....</h2>");
 echo("<h2>" . $sql_query . "</h2>");
-echo("<table><tr><th>Email</th><th>Name</th></tr>\n");
+echo("<table><tr><th>Student's Name</th></tr>\n");
 while ( $row = mysql_fetch_array($result_set) ) {
-  echo("<tr><td>" . $row["StudentEmailAddress"] . "</td>\n" .
-       "     <td>" . $row["StudentName"] . "</td>\n" .
-       "</tr>\n");
+  echo("<tr><td>" . $row["StudentName"] . "</td>\n" . "</tr>\n");
 }
 echo ("</table>\n");
 echo ("</body></html>");

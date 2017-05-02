@@ -15,7 +15,7 @@ if (! @mysql_select_db("db_cjhoffman") ) {
   exit();
 }
 # do a simple query and print it out
-$sql_query="SELECT StudentEmailAddress, StudentName FROM Students";
+$sql_query="SELECT I.InstructorName, I.InstructorGender FROM Instructors I, CourseInstructors CI WHERE I.InstructorGender = 'M' AND CI.InstructorID = I.InstructorID AND CI.CourseID IN (Select F.CourseID FROM StudentCourses F, Students S WHERE F.StudentID = S.StudentEmailAddress AND S.StudentDOB < '1990-01-01')";
 
 $result_set = mysql_query($sql_query);
 if (!$result_set) {
@@ -24,12 +24,13 @@ if (!$result_set) {
   exit();
 }
 
+echo("<h2> Get all male professors who teach students born before 1990 </h2>");
 echo("<h2>" . $sql_query . "</h2>");
-echo("<table><tr><th>Email</th><th>Name</th></tr>\n");
+echo("<table><tr><th>Instructor Name</th><th>Instructor Gender</th></tr>\n");
 while ( $row = mysql_fetch_array($result_set) ) {
-  echo("<tr><td>" . $row["StudentEmailAddress"] . "</td>\n" .
-       "     <td>" . $row["StudentName"] . "</td>\n" .
-       "</tr>\n");
+  echo("<tr><td>" . $row["InstructorName"] . "</td>\n" . 
+	"     <td>" . $row["InstructorGender"] . "</td>\n" .
+       	"</tr>\n");
 }
 echo ("</table>\n");
 echo ("</body></html>");
